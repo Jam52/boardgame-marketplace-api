@@ -1,0 +1,6 @@
+{
+  "boardgames": [
+    { "name": "Shobu", "category": ["abstract strategy"], "complexity": "5" },
+    { "name": "Caverna", "category": ["strategy", "Euro"], "complexity": "8" }
+  ]
+}
