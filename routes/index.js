@@ -12,11 +12,19 @@ router.get('/search', async (req,res) => {
   const category = req.query.category;
   let responseData;
   try {
-    responseData = await axios.get(`https://api.boardgameatlas.com/api/search?client_id=tvggk76LrE&categories=${category}&limit=30&order_by=average_user_rating`)
+    responseData = await axios.get(`https://api.boardgameatlas.com/api/search?categories=${category}&limit=30&order_by=average_user_rating&client_id=tvggk76LrE`)
   } catch (error) {
-    console.log(error);
-    responseData = error
-    res.send(responseData)
+    res.send(error)
+  }
+  res.send(responseData.data)
+})
+
+router.get('/categories', async (req,res) => {
+  let responseData;
+  try {
+    responseData = await axios.get('https://api.boardgameatlas.com/api/game/categories?pretty=true&client_id=tvggk76LrE')
+  } catch (error) {
+    res.send(error)
   }
   res.send(responseData.data)
 })
