@@ -18,8 +18,7 @@ router.get('/search', async (req, res) => {
     year_published,
   } = req.query;
 
-  const queryString = `https://api.boardgameatlas.com/api/search?categories=${categories}&limit=30&order_by=${order_by}&mechanics=${mechanics}&max_players=${player_count}&min_playtime=${play_time}&client_id=tvggk76LrE`;
-
+  const queryString = `https://api.boardgameatlas.com/api/search?categories=${categories}&limit=20&order_by=${order_by}&mechanics=${mechanics}&max_players=${player_count}&min_playtime=${play_time}&year_published=${year_published}&client_id=tvggk76LrE`;
   try {
     const responseData = await axios.get(queryString);
     res.send(responseData.data);
