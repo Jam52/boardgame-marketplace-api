@@ -1,7 +1,12 @@
+let fetchData = require('./handleData.js').fetchData;
+let filterData = require('./handleData.js').filterData;
+
 var express = require('express');
 var router = express.Router();
 var data = require('./data.json');
 const axios = require('axios');
+
+let cashedData = {};
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -9,21 +14,28 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/search', async (req, res) => {
-  const {
-    categories,
-    mechanics,
-    order_by,
-    player_count,
-    play_time,
-    year_published,
-  } = req.query;
+  const queries = {
+    categories: req.query.categories,
+    mechanics: req.query.mechanics,
+    order_by: req.query.order_by,
+    player_count: req.query.player_count,
+    play_time: req.query.play_time,
+    year_published: req.query.year_published,
+  };
 
-  const queryString = `https://api.boardgameatlas.com/api/search?categories=${categories}&limit=20&order_by=${order_by}&mechanics=${mechanics}&max_players=${player_count}&min_playtime=${play_time}&year_published=${year_published}&client_id=tvggk76LrE`;
-  try {
-    const responseData = await axios.get(queryString);
-    res.send(responseData.data);
-  } catch (error) {
-    res.send(error);
+  if (queries.categories !== '') {
+    const mainCategory = queries.categories.split(',')[0];
+    if (cashedData[mainCategory] === undefined) {
+      const data = await fetchData('categories', mainCategory);
+      const dataObj = {
+        games: data,
+        length: data.length,
+      };
+      cashedData[mainCategory] = dataObj;
+      res.send(filterData(dataObj));
+    } else {
+      res.send(filterData(cashedData[mainCategory]));
+    }
   }
 });
 
