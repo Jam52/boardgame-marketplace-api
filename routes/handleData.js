@@ -58,6 +58,11 @@ const filterData = (data, queries) => {
           return game.min_playtime <= value && game.max_playtime >= value;
         });
       }
+      if (key === 'year_published') {
+        gameData.games = gameData.games.filter((game) => {
+          return game.year_published === value;
+        });
+      }
     }
   });
   const filteredGames = gameData.games.slice(0, 30);
