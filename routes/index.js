@@ -17,11 +17,15 @@ router.get('/search', async (req, res) => {
   const queries = {
     categories: req.query.categories,
     mechanics: req.query.mechanics,
-    order_by: req.query.order_by,
     player_count: req.query.player_count,
     play_time: req.query.play_time,
     year_published: req.query.year_published,
+    order_by: req.query.order_by,
   };
+
+  const keyArry = Object.keys(queries);
+
+  // for()
 
   if (queries.categories !== '') {
     const mainCategory = queries.categories.split(',')[0];
