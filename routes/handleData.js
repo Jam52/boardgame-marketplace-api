@@ -4,29 +4,48 @@ const _ = require('lodash');
 const fetchData = async (type, query) => {
   console.log('[fetchData]');
   let returnGameData = [];
-  let gamesReturned = 100;
+  let gamesReturned = 300;
   let skipValue = 0;
 
-  for (let i = 0; i < 15; i++) {
-    if (gamesReturned < 100) {
+  for (let i = 0; i < 6; i++) {
+    if (gamesReturned < 300) {
       break;
     } else {
-      const queryString = `https://api.boardgameatlas.com/api/search?${type}=${query}&limit=100&skip=${skipValue}&client_id=tvggk76LrE`;
-      skipValue += 100;
-      let gameData;
-      try {
-        const responseData = await axios.get(queryString);
-        gameData = await responseData.data.games;
-        gamesReturned = gameData.length;
-        returnGameData = returnGameData.concat(await gameData);
-      } catch (error) {
-        console.log(error);
+      let batchGameData = [];
+      for (let i = 0; i < 3; i++) {
+        batchGameData.push(loadData(type, query, 100 * i + skipValue));
       }
+      skipValue += 300;
+      await Promise.all(batchGameData).then((allGameData) => {
+        console.log('finished fetching');
+        let finisehdBatchData = [];
+        allGameData.forEach((dataSet) => {
+          finisehdBatchData = finisehdBatchData.concat(dataSet);
+        });
+
+        gamesReturned = finisehdBatchData.length;
+        console.log('gamesReturned: ' + gamesReturned);
+        returnGameData = returnGameData.concat(finisehdBatchData);
+      });
     }
   }
-
   return returnGameData;
 };
+
+const loadData = async (type, query, skipValue) => {
+  console.log(skipValue);
+  const queryString = `https://api.boardgameatlas.com/api/search?${type}=${query}&limit=100&skip=${skipValue}&client_id=tvggk76LrE`;
+  let gameData;
+  try {
+    const responseData = await axios.get(queryString);
+    gameData = await responseData.data.games;
+    return await gameData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const loadDataBatch = () => {};
 
 const filterData = (data, queries) => {
   let gameData = _.clone(data);
