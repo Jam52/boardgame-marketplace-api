@@ -6,7 +6,7 @@ const fetchData = async (type, query) => {
   let gamesReturned = 300;
   let skipValue = 0;
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 3; i++) {
     if (gamesReturned < 300) {
       break;
     } else {
@@ -14,14 +14,19 @@ const fetchData = async (type, query) => {
       for (let i = 0; i < 3; i++) {
         batchGameData.push(loadData(type, query, 100 * i + skipValue));
       }
-      skipValue += 300;
+
       await Promise.all(batchGameData).then((allGameData) => {
+        skipValue += 300;
         let finisehdBatchData = [];
         allGameData.forEach((dataSet) => {
-          finisehdBatchData = finisehdBatchData.concat(dataSet);
+          console.log(dataSet.length);
+          if (dataSet.length > 0) {
+            finisehdBatchData = finisehdBatchData.concat(dataSet);
+          }
         });
 
         gamesReturned = finisehdBatchData.length;
+
         returnGameData = returnGameData.concat(finisehdBatchData);
       });
     }
@@ -44,11 +49,9 @@ const loadData = async (type, query, skipValue) => {
 const filterData = (data, queries) => {
   let gameData = _.clone(data);
   let entries = Object.entries(queries);
-  console.log(queries);
   entries.forEach((query) => {
     const [key, value] = query;
     if (value !== '') {
-      console.log(value);
       if (key === 'mechanics') {
         gameData.games = gameData.games.filter((game) => {
           const ids = game.mechanics.map((obj) => obj.id);
@@ -112,7 +115,6 @@ const returnRemainingLabels = (label, usedTerms, gameData) => {
       ].reduce((arr, total) => total.concat(arr), []),
     ),
   ].filter((label) => {
-    console.log([...usedTerms.split(',')].includes(label), label);
     return ![...usedTerms.split(',')].includes(label);
   });
 };
