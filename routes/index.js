@@ -22,8 +22,6 @@ router.get('/search', async (req, res) => {
     year_published: req.query.year_published,
   };
 
-  // const [order_by] = req.query;
-
   const keyArry = Object.keys(queries);
 
   for (let i = 0; i < keyArry.length; i++) {
@@ -35,6 +33,8 @@ router.get('/search', async (req, res) => {
         const dataObj = {
           games: data,
           length: data.length,
+          mechanics: [],
+          categories: [],
         };
         cashedData[mainCategory] = dataObj;
         try {
