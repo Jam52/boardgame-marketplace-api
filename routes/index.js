@@ -1,9 +1,10 @@
 let fetchData = require('./handleData.js').fetchData;
 let filterData = require('./handleData.js').filterData;
+let db = require('../database/index');
+let dayjs = require('dayjs');
 
 var express = require('express');
 var router = express.Router();
-var data = require('./data.json');
 const axios = require('axios');
 
 let cashedData = {};
@@ -14,6 +15,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/search', async (req, res) => {
+  const dateTest = await db.queryDate();
+  if (dayjs(dateTest[0].date).isBefore(dayjs(), 'day')) {
+    const update = await db.updateDate(dayjs().format('YYYY-MM-DD'));
+  }
+
   const queries = {
     categories: req.query.categories,
     mechanics: req.query.mechanics,
