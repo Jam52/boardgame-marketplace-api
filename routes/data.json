@@ -1,6 +1,408 @@
 {
-  "boardgames": [
-    { "name": "Shobu", "category": ["abstract strategy"], "complexity": "5" },
-    { "name": "Caverna", "category": ["strategy", "Euro"], "complexity": "8" }
+  "games": [
+    {
+      "id": "TAAifFP590",
+      "handle": "root",
+      "url": "https://www.boardgameatlas.com/game/TAAifFP590/root",
+      "name": "Root",
+      "price": "44.99",
+      "price_ca": "67.95",
+      "price_uk": "43.29",
+      "price_au": "79.99",
+      "msrp": 81.6,
+      "msrps": [
+        {
+          "country": "CA",
+          "price": 81.6
+        },
+        {
+          "country": "UK",
+          "price": 0
+        },
+        {
+          "country": "US",
+          "price": 60
+        }
+      ],
+      "discount": "0.17",
+      "year_published": 2018,
+      "min_players": 2,
+      "max_players": 4,
+      "min_playtime": 60,
+      "max_playtime": 90,
+      "min_age": 10,
+      "description": "<p>Find adventure in this marvelous asymmetric game. Root provides limitless replay value as you and your friends explore the unique factions all wanting to rule a fantastic forest kingdom. Play as the Marquise de Cat and dominate the woods, extracting its riches and policing its inhabitants, as the Woodland Alliance, gathering supporters and coordinate revolts against the ruling regime, the Eyrie Dynasties, regaining control of the woods while keeping your squabbling court at bay, or as the Vagabond, seeking fame and fortune as you forge alliances and rivalries with the other players. Each faction has its own play style and paths to victory, providing an immersive game experience you will want to play again and again.</p>",
+      "commentary": "<p>During a car ride, designer Cole and his wife were listening to an audio book of T. H. White's <strong>The Once and Future King</strong>. When the Monarch of Moat delivered the following line to Arthur, it spawned a series of ideas creating the framework for Root, a game of Might and Right: \"...There is only power. Power is of the individual mind, but the mind's power is not enough. Power of the body decides everything in the end, and only Might is Right.\"</p>",
+      "thumb_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1540147295104",
+      "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1540147295104",
+      "matches_specs": null,
+      "specs": [],
+      "mechanics": [
+        {
+          "id": "PGjmKGi26h",
+          "url": "https://www.boardgameatlas.com/mechanic/PGjmKGi26h/undefined"
+        },
+        {
+          "id": "ckCp1oTVMy",
+          "url": "https://www.boardgameatlas.com/mechanic/ckCp1oTVMy/undefined"
+        },
+        {
+          "id": "05zCZoLvQJ",
+          "url": "https://www.boardgameatlas.com/mechanic/05zCZoLvQJ/undefined"
+        },
+        {
+          "id": "R0bGq4cAl4",
+          "url": "https://www.boardgameatlas.com/mechanic/R0bGq4cAl4/undefined"
+        },
+        {
+          "id": "yu3eas6v7A",
+          "url": "https://www.boardgameatlas.com/mechanic/yu3eas6v7A/undefined"
+        },
+        {
+          "id": "WPytek5P8l",
+          "url": "https://www.boardgameatlas.com/mechanic/WPytek5P8l/undefined"
+        },
+        {
+          "id": "MEAoOygZsA",
+          "url": "https://www.boardgameatlas.com/mechanic/MEAoOygZsA/undefined"
+        },
+        {
+          "id": "qZx4PEzKKz",
+          "url": "https://www.boardgameatlas.com/mechanic/qZx4PEzKKz/undefined"
+        },
+        {
+          "id": "XM2FYZmBHH",
+          "url": "https://www.boardgameatlas.com/mechanic/XM2FYZmBHH/undefined"
+        }
+      ],
+      "categories": [
+        {
+          "id": "hBqZ3Ar4RJ",
+          "url": "https://www.boardgameatlas.com/category/hBqZ3Ar4RJ/undefined"
+        },
+        {
+          "id": "KUBCKBkGxV",
+          "url": "https://www.boardgameatlas.com/category/KUBCKBkGxV/undefined"
+        },
+        {
+          "id": "MWoxgHrOJD",
+          "url": "https://www.boardgameatlas.com/category/MWoxgHrOJD/undefined"
+        },
+        {
+          "id": "Bq6M0TJyg7",
+          "url": "https://www.boardgameatlas.com/category/Bq6M0TJyg7/undefined"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "jyc9bV7f9D",
+          "num_games": null,
+          "score": 9999999,
+          "game": {},
+          "url": "https://www.boardgameatlas.com/publisher/jyc9bV7f9D/undefined",
+          "images": {
+            "thumb": null,
+            "small": null,
+            "medium": null,
+            "large": null,
+            "original": null
+          }
+        }
+      ],
+      "designers": [
+        {
+          "id": "DJCmDFXmsh",
+          "num_games": null,
+          "score": 9999999,
+          "game": {},
+          "url": "https://www.boardgameatlas.com/designer/DJCmDFXmsh/undefined",
+          "images": {
+            "thumb": null,
+            "small": null,
+            "medium": null,
+            "large": null,
+            "original": null
+          }
+        }
+      ],
+      "primary_publisher": {
+        "id": "jyc9bV7f9D",
+        "name": "Leder Games",
+        "url": "https://www.boardgameatlas.com/publisher/jyc9bV7f9D/leder-games"
+      },
+      "primary_designer": {
+        "id": "DJCmDFXmsh",
+        "name": "Cole Wehrle",
+        "url": "https://www.boardgameatlas.com/designer/DJCmDFXmsh/cole-wehrle"
+      },
+      "developers": [],
+      "related_to": [],
+      "artists": ["Kyle Ferrin"],
+      "names": [],
+      "rules_url": "https://drive.google.com/drive/folders/1i9-iCUDzfGMs7HjFHhahwMS6efvvfX5w",
+      "amazon_rank": 16636,
+      "official_url": "http://ledergames.com/root/?utm_source=boardgameatlas.com&utm_medium=search&utm_campaign=bga_ads",
+      "comment_count": 1,
+      "num_user_ratings": 301,
+      "average_user_rating": 4.036076065466848,
+      "weight_amount": 4,
+      "weight_units": "lbs ",
+      "size_height": 9,
+      "size_depth": 3,
+      "size_units": "inches ",
+      "historical_low_prices": [
+        {
+          "country": "UK",
+          "date": "2021-02-01T16:17:25.910Z",
+          "price": 43.29,
+          "isLow": false
+        },
+        {
+          "country": "AU",
+          "date": "2021-02-16T00:37:01.676Z",
+          "price": 79.99,
+          "isLow": false
+        },
+        {
+          "country": "CA",
+          "date": "2021-02-16T20:57:23.516Z",
+          "price": 67.95,
+          "isLow": false
+        }
+      ],
+      "active": true,
+      "bgg_id": 237182,
+      "num_user_complexity_votes": 9,
+      "average_learning_complexity": 3.888888888888889,
+      "average_strategy_complexity": 3.6666666666666665,
+      "visits": 13965,
+      "lists": 1364,
+      "mentions": 439,
+      "links": 68,
+      "plays": 1539,
+      "rank": 1,
+      "type": "game",
+      "trending_rank": 0,
+      "listing_clicks": 106,
+      "is_historical_low": false,
+      "msrp_text": "Can$81.60",
+      "price_text": "Can$67.95",
+      "tags": [
+        "Корни",
+        "茂林源记",
+        "루트",
+        "Root",
+        "Root A Game of Woodland Might Right",
+        "Root A Game of Woodland Might and Right"
+      ],
+      "images": {
+        "thumb": "https://d2k4q26owzy373.cloudfront.net/40x40/games/uploaded/1540147295104",
+        "small": "https://d2k4q26owzy373.cloudfront.net/150x150/games/uploaded/1540147295104",
+        "medium": "https://d2k4q26owzy373.cloudfront.net/350x350/games/uploaded/1540147295104",
+        "large": "https://d2k4q26owzy373.cloudfront.net/700x700/games/uploaded/1540147295104",
+        "original": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1540147295104"
+      },
+      "description_preview": " Find adventure in this marvelous asymmetric game. Root provides limitless replay value as you and your friends explore the unique factions all wanting to rule a fantastic forest kingdom. Play as the Marquise de Cat and dominate the woods, extracting its riches and policing its inhabitants, as the Woodland Alliance, gathering supporters and coordinate revolts against the ruling regime, the Eyrie Dynasties, regaining control of the woods while keeping your squabbling court at bay, or as the Vagabond, seeking fame and fortune as you forge alliances and rivalries with the other players. Each faction has its own play style and paths to victory, providing an immersive game experience you will want to play again and again. "
+    },
+    {
+      "id": "yqR4PtpO8X",
+      "handle": "scythe",
+      "url": "https://www.boardgameatlas.com/game/yqR4PtpO8X/scythe",
+      "name": "Scythe",
+      "price": "57.91",
+      "price_ca": "75.95",
+      "price_uk": "53.79",
+      "price_au": "119.95",
+      "msrp": 0,
+      "msrps": [
+        {
+          "country": "UK",
+          "price": 67
+        },
+        {
+          "country": "US",
+          "price": 90
+        }
+      ],
+      "discount": "0.00",
+      "year_published": 2016,
+      "min_players": 1,
+      "max_players": 5,
+      "min_playtime": 90,
+      "max_playtime": 120,
+      "min_age": 14,
+      "description": "<p><em>Scythe</em> gives players almost complete control over their fate. Other than each player's individual hidden objective card, the only elements of luck or variability are &quot;Encounter&quot; cards that players will draw as they interact with the citizens of newly explored lands. Each encounter card provides the player with several options, allowing them to mitigate the luck of the draw through their selection. Combat is also driven by choices, not luck or randomness.<br /><br /><em>Scythe</em> uses a streamlined action-selection mechanism (no rounds or phases) to keep gameplay moving at a brisk pace and reduce downtime between turns. While there is plenty of direct conflict for players who seek it, there is no player elimination.<br /><br />Every part of <em>Scythe</em> has an aspect of engine-building to it. Players can upgrade actions to become more efficient, build structures that improve their position on the map, enlist new recruits to enhance character abilities, activate mechs to deter opponents from invading, and expand their borders to reap greater types and quantities of resources. These engine-building aspects create a sense of momentum and progress throughout the game. The order in which players improve their engine adds to the unique feel of each game, even when playing one faction multiple times.</p>",
+      "commentary": "",
+      "thumb_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+      "image_url": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+      "matches_specs": null,
+      "specs": [],
+      "mechanics": [
+        {
+          "id": "Bc7R8pLoGk",
+          "url": "https://www.boardgameatlas.com/mechanic/Bc7R8pLoGk/undefined"
+        },
+        {
+          "id": "05zCZoLvQJ",
+          "url": "https://www.boardgameatlas.com/mechanic/05zCZoLvQJ/undefined"
+        },
+        {
+          "id": "yu3eas6v7A",
+          "url": "https://www.boardgameatlas.com/mechanic/yu3eas6v7A/undefined"
+        },
+        {
+          "id": "qu5BcGjAzk",
+          "url": "https://www.boardgameatlas.com/mechanic/qu5BcGjAzk/undefined"
+        },
+        {
+          "id": "BeD8NYAaSU",
+          "url": "https://www.boardgameatlas.com/mechanic/BeD8NYAaSU/undefined"
+        },
+        {
+          "id": "dITGE93SCS",
+          "url": "https://www.boardgameatlas.com/mechanic/dITGE93SCS/undefined"
+        },
+        {
+          "id": "XM2FYZmBHH",
+          "url": "https://www.boardgameatlas.com/mechanic/XM2FYZmBHH/undefined"
+        },
+        {
+          "id": "fBOTEBUAmV",
+          "url": "https://www.boardgameatlas.com/mechanic/fBOTEBUAmV/undefined"
+        }
+      ],
+      "categories": [
+        {
+          "id": "85OKv8p5Ow",
+          "url": "https://www.boardgameatlas.com/category/85OKv8p5Ow/undefined"
+        },
+        {
+          "id": "nWDac9tQzt",
+          "url": "https://www.boardgameatlas.com/category/nWDac9tQzt/undefined"
+        },
+        {
+          "id": "Bq6M0TJyg7",
+          "url": "https://www.boardgameatlas.com/category/Bq6M0TJyg7/undefined"
+        },
+        {
+          "id": "zyj9ZK3mHB",
+          "url": "https://www.boardgameatlas.com/category/zyj9ZK3mHB/undefined"
+        },
+        {
+          "id": "3B3QpKvXD3",
+          "url": "https://www.boardgameatlas.com/category/3B3QpKvXD3/undefined"
+        },
+        {
+          "id": "4hZlqoitAY",
+          "url": "https://www.boardgameatlas.com/category/4hZlqoitAY/undefined"
+        },
+        {
+          "id": "buDTYyPw4D",
+          "url": "https://www.boardgameatlas.com/category/buDTYyPw4D/undefined"
+        }
+      ],
+
+      "designers": [
+        {
+          "id": "QIz5pAPzFk",
+          "num_games": null,
+          "score": 9999999,
+          "game": {},
+          "url": "https://www.boardgameatlas.com/designer/QIz5pAPzFk/undefined",
+          "images": {
+            "thumb": null,
+            "small": null,
+            "medium": null,
+            "large": null,
+            "original": null
+          }
+        }
+      ],
+      "primary_publisher": {
+        "id": "njVFVNfJc7",
+        "name": "Stonemaier Games",
+        "url": "https://www.boardgameatlas.com/publisher/njVFVNfJc7/stonemaier-games"
+      },
+      "primary_designer": {
+        "id": "QIz5pAPzFk",
+        "name": "Jamey Stegmaier",
+        "url": "https://www.boardgameatlas.com/designer/QIz5pAPzFk/jamey-stegmaier"
+      },
+      "developers": [],
+      "related_to": [],
+      "artists": ["Jakub Różalski"],
+      "names": [],
+      "rules_url": "https://app.box.com/s/rj3jrw0rab2uiz02up89kbant5g8ew1p",
+      "amazon_rank": 1583,
+      "cs_rating": 4.7,
+      "official_url": "https://stonemaiergames.com/games/scythe/?utm_source=boardgameatlas.com&utm_medium=search&utm_campaign=bga_ads",
+      "comment_count": 0,
+      "num_user_ratings": 622,
+      "average_user_rating": 4.051032550490893,
+      "weight_amount": 7.3,
+      "weight_units": "lbs",
+      "size_height": 14.4,
+      "size_depth": 3.9,
+      "size_units": "inches ",
+      "historical_low_prices": [
+        {
+          "country": "UK",
+          "date": "2021-02-11T03:14:48.835Z",
+          "price": 53.79,
+          "isLow": false
+        },
+        {
+          "country": "AU",
+          "date": "2021-02-16T00:54:08.116Z",
+          "price": 119.95,
+          "isLow": false
+        },
+        {
+          "country": "US",
+          "date": "2021-02-16T15:42:28.761Z",
+          "price": 57.91,
+          "isLow": true
+        }
+      ],
+      "active": true,
+      "bgg_id": 169786,
+      "num_user_complexity_votes": 10,
+      "average_learning_complexity": 3.1,
+      "average_strategy_complexity": 3.4000000000000004,
+      "visits": 6380,
+      "lists": 1643,
+      "mentions": 364,
+      "links": 41,
+      "plays": 3458,
+      "rank": 2,
+      "type": "game",
+      "trending_rank": 0,
+      "listing_clicks": 25,
+      "is_historical_low": false,
+      "price_text": "Can$75.95",
+      "tags": [
+        "Sçythe",
+        "Серп",
+        "大鎌戦役",
+        "鐮刀戰爭",
+        "사이쓰",
+        "Коса",
+        "사이드",
+        "Scythe",
+        "Scythe (Box Damage)",
+        "Scythe Collector's Edition",
+        "Scythe Special Edition",
+        "Scythe Collection 6 Base Game Legendary Box 2 Expansions",
+        "Scythe Core Set"
+      ],
+      "images": {
+        "thumb": "https://d2k4q26owzy373.cloudfront.net/40x40/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+        "small": "https://d2k4q26owzy373.cloudfront.net/150x150/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+        "medium": "https://d2k4q26owzy373.cloudfront.net/350x350/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+        "large": "https://d2k4q26owzy373.cloudfront.net/700x700/games/uploaded/1559254971843-513-lrmjs2L.jpg",
+        "original": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254971843-513-lrmjs2L.jpg"
+      },
+      "description_preview": "  Scythe  gives players almost complete control over their fate. Other than each player's individual hidden objective card, the only elements of luck or variability are \"Encounter\" cards that players will draw as they interact with the citizens of newly explored lands. Each encounter card provides the player with several options, allowing them to mitigate the luck of the draw through their selection. Combat is also driven by choices, not luck or randomness.   Scythe  uses a streamlined action-selection mechanism (no rounds or phases) to keep gameplay moving at a brisk pace and reduce downtime between turns. While there is plenty of direct conflict for players who seek it, there is no player elimination.  Every part of  Scythe  has an aspect of engine-building to it. Players can upgrade actions to become more efficient, build structures that improve their position on the map, enlist new recruits to enhance character abilities, activate mechs to deter opponents from invading, and expand their borders to reap greater types and quantities of resources. These engine-building aspects create a sense of momentum and progress throughout the game. The order in which players improve their engine adds to the unique feel of each game, even when playing one faction multiple times. "
+    }
   ]
 }

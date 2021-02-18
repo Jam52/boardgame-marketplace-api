@@ -1,5 +1,6 @@
-let fetchData = require('./handleData.js').fetchData;
-let filterData = require('./handleData.js').filterData;
+let fetchDataInParallel = require('../services/fetchApiData')
+  .fetchDataInParallel;
+let filterData = require('../services/filterData.js').filterDataWithQueries;
 let db = require('../database/index');
 let dayjs = require('dayjs');
 
@@ -35,12 +36,14 @@ router.get('/search', async (req, res) => {
       const mainCategory = queries[keyArry[i]].split(',')[0];
       if (cashedData[mainCategory] === undefined) {
         console.log('Fetching');
-        const data = await fetchData([keyArry[i]], mainCategory);
+        const data = await fetchDataInParallel([keyArry[i]], mainCategory);
         const dataObj = {
           games: data,
           length: data.length,
           mechanics: [],
           categories: [],
+          max_players: null,
+          min_players: null,
         };
         cashedData[mainCategory] = dataObj;
         try {
