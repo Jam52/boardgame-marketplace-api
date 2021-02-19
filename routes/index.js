@@ -1,7 +1,14 @@
+let fetchDataInParallel = require('../services/fetchApiData')
+  .fetchDataInParallel;
+let filterData = require('../services/filterData.js').filterDataWithQueries;
+let db = require('../database/index');
+let dayjs = require('dayjs');
+
 var express = require('express');
 var router = express.Router();
-var data = require('./data.json');
 const axios = require('axios');
+
+let cashedData = {};
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -9,21 +16,54 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/search', async (req, res) => {
-  const {
-    categories,
-    mechanics,
-    order_by,
-    player_count,
-    play_time,
-    year_published,
-  } = req.query;
+  const dateTest = await db.queryDate();
+  if (dayjs(dateTest[0].date).isBefore(dayjs(), 'day')) {
+    const update = await db.updateDate(dayjs().format('YYYY-MM-DD'));
+  }
 
-  const queryString = `https://api.boardgameatlas.com/api/search?categories=${categories}&limit=20&order_by=${order_by}&mechanics=${mechanics}&max_players=${player_count}&min_playtime=${play_time}&year_published=${year_published}&client_id=tvggk76LrE`;
-  try {
-    const responseData = await axios.get(queryString);
-    res.send(responseData.data);
-  } catch (error) {
-    res.send(error);
+  const queries = {
+    categories: req.query.categories,
+    mechanics: req.query.mechanics,
+    player_count: req.query.player_count,
+    play_time: req.query.play_time,
+    year_published: req.query.year_published,
+  };
+
+  const keyArry = Object.keys(queries);
+
+  for (let i = 0; i < keyArry.length; i++) {
+    if (queries[keyArry[i]] !== '') {
+      const mainCategory = queries[keyArry[i]].split(',')[0];
+      if (cashedData[mainCategory] === undefined) {
+        console.log('Fetching');
+        const data = await fetchDataInParallel([keyArry[i]], mainCategory);
+        const dataObj = {
+          games: data,
+          length: data.length,
+          mechanics: [],
+          categories: [],
+          max_players: null,
+          min_players: null,
+        };
+        cashedData[mainCategory] = dataObj;
+        try {
+          res.send(filterData(dataObj, queries));
+        } catch (error) {
+          console.log(error);
+        }
+
+        break;
+      } else {
+        console.log('returning from cash');
+        try {
+          res.send(filterData(cashedData[mainCategory], queries));
+        } catch (error) {
+          console.log(error);
+        }
+
+        break;
+      }
+    }
   }
 });
 
