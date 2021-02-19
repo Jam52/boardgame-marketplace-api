@@ -16,11 +16,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/search', async (req, res) => {
-  const dateTest = await db.queryDate();
-  if (dayjs(dateTest[0].date).isBefore(dayjs(), 'day')) {
-    const update = await db.updateDate(dayjs().format('YYYY-MM-DD'));
-  }
-
   const queries = {
     categories: req.query.categories,
     mechanics: req.query.mechanics,
@@ -34,7 +29,9 @@ router.get('/search', async (req, res) => {
   for (let i = 0; i < keyArry.length; i++) {
     if (queries[keyArry[i]] !== '') {
       const mainCategory = queries[keyArry[i]].split(',')[0];
-      if (cashedData[mainCategory] === undefined) {
+      const dateOfLastQueryCall = await db.queryDate(mainCategory);
+      console.log(dateOfLastQueryCall);
+      if (dateOfLastQueryCall === undefined) {
         console.log('Fetching');
         const data = await fetchDataInParallel([keyArry[i]], mainCategory);
         const dataObj = {
@@ -45,7 +42,8 @@ router.get('/search', async (req, res) => {
           max_players: null,
           min_players: null,
         };
-        cashedData[mainCategory] = dataObj;
+        db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
+        db.addGamesToDatabase(dataObj);
         try {
           res.send(filterData(dataObj, queries));
         } catch (error) {
