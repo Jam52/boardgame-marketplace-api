@@ -1,6 +1,6 @@
 let fetchDataInParallel = require('../services/fetchApiData')
   .fetchDataInParallel;
-let filterData = require('../services/filterData.js').filterDataWithQueries;
+let filterData = require('../services/filterData.js');
 let db = require('../database/index');
 let dayjs = require('dayjs');
 
@@ -31,21 +31,22 @@ router.get('/search', async (req, res) => {
       const mainCategory = queries[keyArry[i]].split(',')[0];
       const dateOfLastQueryCall = await db.queryDate(mainCategory);
       console.log(dateOfLastQueryCall);
-      if (dateOfLastQueryCall === undefined) {
+
+      if (
+        dateOfLastQueryCall.length === 0 ||
+        dayjs(dateOfLastQueryCall.date).isBefore(dayjs(), 'day')
+      ) {
         console.log('Fetching');
-        const data = await fetchDataInParallel([keyArry[i]], mainCategory);
-        const dataObj = {
-          games: data,
-          length: data.length,
-          mechanics: [],
-          categories: [],
-          max_players: null,
-          min_players: null,
-        };
+        const games = await fetchDataInParallel([keyArry[i]], mainCategory);
         db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
-        db.addGamesToDatabase(dataObj);
+        const cachedGames = await db.addGamesToDatabase(games);
+        const filteredGames = filterData.filterDataWithQueries(
+          cachedGames,
+          queries,
+        );
+
         try {
-          res.send(filterData(dataObj, queries));
+          res.send(filteredGames);
         } catch (error) {
           console.log(error);
         }
@@ -54,7 +55,11 @@ router.get('/search', async (req, res) => {
       } else {
         console.log('returning from cash');
         try {
-          res.send(filterData(cashedData[mainCategory], queries));
+          const cachesGames = await db.fetchGamesWithMainQuery(
+            mainCategory,
+            queries,
+          );
+          res.send(filterData.filterDataWithQueries(cachesGames, queries));
         } catch (error) {
           console.log(error);
         }
