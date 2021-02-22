@@ -16,6 +16,7 @@ const filterDataWithQueries = (games, queries) => {
       if (key === 'mechanics' || key === 'categories') {
         gameObj.games = mainTypeFilter(key, value, gameObj.games);
       }
+
       if (key === 'player_count') {
         gameObj.games = gameObj.games.filter((game) => {
           return game.min_players <= value && game.max_players >= value;
@@ -55,16 +56,14 @@ const filterDataWithQueries = (games, queries) => {
   gameObj.length = gameObj.games.length;
   const filteredGames = gameObj.games.slice(0, 30);
   gameObj.games = filteredGames;
-
   return gameObj;
 };
 
-const mainTypeFilter = (type, values, games) => {
+const mainTypeFilter = (key, values, games) => {
   const filteredGames = games.filter((game) => {
-    const valuesFilteredByType = values.split(',').filter((value) => {
-      return game[type].includes(value);
-    });
-    return valuesFilteredByType.length === values.split(',').length;
+    return values
+      .split(',')
+      .every((value) => JSON.stringify(game[key]).includes(value));
   });
   return filteredGames;
 };

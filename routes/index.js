@@ -39,9 +39,9 @@ router.get('/search', async (req, res) => {
         console.log('Fetching');
         const games = await fetchDataInParallel([keyArry[i]], mainCategory);
         db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
-        const cachedGames = await db.addGamesToDatabase(games);
+        const returnedGamesFromBd = await db.addGamesToDatabase(games);
         const filteredGames = filterData.filterDataWithQueries(
-          cachedGames,
+          returnedGamesFromBd,
           queries,
         );
 

@@ -56,11 +56,10 @@ const addGamesToDatabase = async (games) => {
       game.max_playtime
     }, ${game.min_playtime}, ${game.year_published}, ${
       game.average_user_rating
-    }, '${game.thumb_url}', '${game.name.replace("'", '"')}')`;
+    }, '${game.thumb_url}', E'${game.name.replace(/'/g, "\\'")}')`;
   });
 
-  const query1 = `INSERT INTO games (id, categories, mechanics, max_players, min_players, max_playtime, min_playtime, year_published, average_user_rating, thumb_url, name) VALUES ${games} RETURNING *`;
-  console.log(query1);
+  const query1 = `INSERT INTO "games" (id, categories, mechanics, max_players, min_players, max_playtime, min_playtime, year_published, average_user_rating, thumb_url, name) VALUES ${games} ON CONFLICT DO NOTHING RETURNING *`;
   try {
     const res = await client.query(query1);
     return res.rows;
