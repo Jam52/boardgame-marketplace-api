@@ -32,7 +32,6 @@ const fetchDataInParallel = async (type, query) => {
         skipValue += 300;
         let finisehdBatchData = [];
         allGameData.forEach((dataSet) => {
-          console.log(dataSet.length);
           if (dataSet.length > 0) {
             finisehdBatchData = finisehdBatchData.concat(dataSet);
           }

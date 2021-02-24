@@ -1,72 +1,79 @@
 const _ = require('lodash');
 
-const filterDataWithQueries = (data, queries) => {
-  let gameData = _.clone(data);
+const filterDataWithQueries = (games, queries) => {
+  let gameObj = {
+    games: games,
+    length: null,
+    mechanics: [],
+    categories: [],
+    max_players: null,
+    min_players: null,
+  };
   let entries = Object.entries(queries);
   entries.forEach((query) => {
     const [key, value] = query;
     if (value !== '') {
       if (key === 'mechanics' || key === 'categories') {
-        gameData.games = mainTypeFilter(key, value, gameData.games);
+        gameObj.games = mainTypeFilter(key, value, gameObj.games);
       }
+
       if (key === 'player_count') {
-        gameData.games = gameData.games.filter((game) => {
+        gameObj.games = gameObj.games.filter((game) => {
           return game.min_players <= value && game.max_players >= value;
         });
       }
       if (key === 'play_time') {
-        gameData.games = gameData.games.filter((game) => {
+        gameObj.games = gameObj.games.filter((game) => {
           return game.min_playtime <= value && game.max_playtime >= value;
         });
       }
       if (key === 'year_published') {
-        gameData.games = gameData.games.filter((game) => {
+        gameObj.games = gameObj.games.filter((game) => {
           return game.year_published === value;
         });
       }
     }
   });
 
-  gameData.mechanics = returnRemainingLabels(
+  gameObj.mechanics = returnRemainingLabels(
     'mechanics',
     queries.mechanics,
-    gameData,
+    gameObj.games,
   );
 
-  gameData.categories = returnRemainingLabels(
+  gameObj.categories = returnRemainingLabels(
     'categories',
     queries.categories,
-    gameData,
+    gameObj.games,
   );
 
-  gameData.max_players = Math.max(
-    ...gameData.games.map((game) => game.max_players),
+  gameObj.max_players = Math.max(
+    ...gameObj.games.map((game) => game.max_players),
   );
-  gameData.min_players = Math.min(
-    ...gameData.games.map((game) => game.min_players),
+  gameObj.min_players = Math.min(
+    ...gameObj.games.map((game) => game.min_players),
   );
-
-  const filteredGames = gameData.games.slice(0, 30);
-  gameData.games = filteredGames;
-  return gameData;
+  gameObj.length = gameObj.games.length;
+  const filteredGames = gameObj.games.slice(0, 30);
+  gameObj.games = filteredGames;
+  return gameObj;
 };
 
-const mainTypeFilter = (type, value, games) => {
-  return games.filter((game) => {
-    const ids = game[type].map((obj) => obj.id);
-    return (
-      [...value.split(',')].filter((value) => ids.includes(value)).length ===
-      [...value.split(',')].length
-    );
+const mainTypeFilter = (key, values, games) => {
+  const filteredGames = games.filter((game) => {
+    return values
+      .split(',')
+      .every((value) => JSON.stringify(game[key]).includes(value));
   });
+  return filteredGames;
 };
 
 const returnRemainingLabels = (label, usedTerms, gameData) => {
   return [
     ...new Set(
       [
-        ...gameData.games.map((game) => {
-          return game[label].map((item) => item.id);
+        ...gameData.map((game) => {
+          return game[label].map((item) => item);
         }),
       ].reduce((arr, total) => total.concat(arr), []),
     ),

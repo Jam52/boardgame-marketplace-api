@@ -1,6 +1,6 @@
 let fetchDataInParallel = require('../services/fetchApiData')
   .fetchDataInParallel;
-let filterData = require('../services/filterData.js').filterDataWithQueries;
+let filterData = require('../services/filterData.js');
 let db = require('../database/index');
 let dayjs = require('dayjs');
 
@@ -16,11 +16,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/search', async (req, res) => {
-  const dateTest = await db.queryDate();
-  if (dayjs(dateTest[0].date).isBefore(dayjs(), 'day')) {
-    const update = await db.updateDate(dayjs().format('YYYY-MM-DD'));
-  }
-
   const queries = {
     categories: req.query.categories,
     mechanics: req.query.mechanics,
@@ -34,20 +29,27 @@ router.get('/search', async (req, res) => {
   for (let i = 0; i < keyArry.length; i++) {
     if (queries[keyArry[i]] !== '') {
       const mainCategory = queries[keyArry[i]].split(',')[0];
-      if (cashedData[mainCategory] === undefined) {
+      const dateOfLastQueryCall = await db.queryDate(mainCategory);
+      console.log(dateOfLastQueryCall);
+
+      if (
+        dateOfLastQueryCall.length === 0 ||
+        dayjs(dateOfLastQueryCall.date).isBefore(dayjs(), 'day')
+      ) {
         console.log('Fetching');
-        const data = await fetchDataInParallel([keyArry[i]], mainCategory);
-        const dataObj = {
-          games: data,
-          length: data.length,
-          mechanics: [],
-          categories: [],
-          max_players: null,
-          min_players: null,
-        };
-        cashedData[mainCategory] = dataObj;
+        const games = await fetchDataInParallel([keyArry[i]], mainCategory);
+        db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
+        const returnedGamesFromBd = await db.addGamesToDatabase(games);
+        if (returnedGamesFromBd) {
+          db.addGamesToCategoryTable(games);
+        }
+        const filteredGames = filterData.filterDataWithQueries(
+          returnedGamesFromBd,
+          queries,
+        );
+
         try {
-          res.send(filterData(dataObj, queries));
+          res.send(filteredGames);
         } catch (error) {
           console.log(error);
         }
@@ -56,7 +58,11 @@ router.get('/search', async (req, res) => {
       } else {
         console.log('returning from cash');
         try {
-          res.send(filterData(cashedData[mainCategory], queries));
+          const cachesGames = await db.fetchGamesWithMainQuery(
+            mainCategory,
+            queries,
+          );
+          res.send(filterData.filterDataWithQueries(cachesGames, queries));
         } catch (error) {
           console.log(error);
         }
