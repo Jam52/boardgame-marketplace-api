@@ -1,8 +1,8 @@
 require('dotenv').config();
-const format = require('pg-format');
 const { Pool, Client } = require('pg');
-
+const pgp = require('pg-promise')();
 const connectionString = `postgresql://postgres:${process.env.PGPASSWORD}@localhost:5432/boardgame-db`;
+const db = pgp(connectionString);
 
 const client = new Client({
   connectionString,
@@ -30,19 +30,12 @@ const queryDate = async (queryId) => {
 };
 
 const addDateToQuery = async (queryId, date) => {
-  const client = await pool.connect();
-  try {
-    const res = await client.query(
-      `INSERT INTO mainQueryDate(id, date) 
-      VALUES ('${queryId}', '${date.toString()}') ON CONFLICT DO NOTHING`,
-    );
-    return res.rows;
-  } catch (e) {
-    console.log('ERROR IN addDateToQuery', e);
-    return undefined;
-  } finally {
-    client.release();
-  }
+  db.none(
+    'INSERT INTO mainQueryDate(id, date) VALUES($1,$2) ON CONFLICT DO NOTHING',
+    [queryId, date.toString()],
+  ).then(() => {
+    console.log('Date Added');
+  });
 };
 
 const addGamesToDatabase = async (games) => {
@@ -70,6 +63,27 @@ const addGamesToDatabase = async (games) => {
   }
 };
 
+const addGamesToCategoryTable = async (games) => {
+  const client = await pool.connect();
+  const queryArray = [];
+  games.forEach((game) => {
+    game.categories.forEach((cat) =>
+      queryArray.push(`('${game.id}', '${cat.id}')`),
+    );
+    game.mechanics.forEach((mech) =>
+      queryArray.push(`('${game.id}', '${mech.id}')`),
+    );
+  });
+
+  const query = `INSERT INTO games_categories (game_id, category) VALUES ${queryArray} ON CONFLICT DO NOTHING`;
+  console.log(query);
+  try {
+    res = await client.query(query);
+  } catch (e) {
+    console.log('ERROR IN addGamesToCategoryTable', e);
+  }
+};
+
 const fetchGamesWithMainQuery = async (query) => {
   const client = await pool.connect();
   try {
@@ -87,4 +101,5 @@ module.exports = {
   addGamesToDatabase,
   addDateToQuery,
   fetchGamesWithMainQuery,
+  addGamesToCategoryTable,
 };

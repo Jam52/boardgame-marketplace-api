@@ -40,6 +40,9 @@ router.get('/search', async (req, res) => {
         const games = await fetchDataInParallel([keyArry[i]], mainCategory);
         db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
         const returnedGamesFromBd = await db.addGamesToDatabase(games);
+        if (returnedGamesFromBd) {
+          db.addGamesToCategoryTable(games);
+        }
         const filteredGames = filterData.filterDataWithQueries(
           returnedGamesFromBd,
           queries,
