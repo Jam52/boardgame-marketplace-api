@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const filterDataWithQueries = (games, queries) => {
+const buildReturnObjData = (games, queries) => {
   let gameObj = {
     games: games,
     length: null,
@@ -9,31 +9,31 @@ const filterDataWithQueries = (games, queries) => {
     max_players: null,
     min_players: null,
   };
-  let entries = Object.entries(queries);
-  entries.forEach((query) => {
-    const [key, value] = query;
-    if (value !== '') {
-      if (key === 'mechanics' || key === 'categories') {
-        gameObj.games = mainTypeFilter(key, value, gameObj.games);
-      }
+  // let entries = Object.entries(queries);
+  // entries.forEach((query) => {
+  //   const [key, value] = query;
+  //   if (value !== '') {
+  //     if (key === 'mechanics' || key === 'categories') {
+  //       gameObj.games = mainTypeFilter(key, value, gameObj.games);
+  //     }
 
-      if (key === 'player_count') {
-        gameObj.games = gameObj.games.filter((game) => {
-          return game.min_players <= value && game.max_players >= value;
-        });
-      }
-      if (key === 'play_time') {
-        gameObj.games = gameObj.games.filter((game) => {
-          return game.min_playtime <= value && game.max_playtime >= value;
-        });
-      }
-      if (key === 'year_published') {
-        gameObj.games = gameObj.games.filter((game) => {
-          return game.year_published === value;
-        });
-      }
-    }
-  });
+  //     if (key === 'player_count') {
+  //       gameObj.games = gameObj.games.filter((game) => {
+  //         return game.min_players <= value && game.max_players >= value;
+  //       });
+  //     }
+  //     if (key === 'play_time') {
+  //       gameObj.games = gameObj.games.filter((game) => {
+  //         return game.min_playtime <= value && game.max_playtime >= value;
+  //       });
+  //     }
+  //     if (key === 'year_published') {
+  //       gameObj.games = gameObj.games.filter((game) => {
+  //         return game.year_published === value;
+  //       });
+  //     }
+  //   }
+  // });
 
   gameObj.mechanics = returnRemainingLabels(
     'mechanics',
@@ -59,14 +59,14 @@ const filterDataWithQueries = (games, queries) => {
   return gameObj;
 };
 
-const mainTypeFilter = (key, values, games) => {
-  const filteredGames = games.filter((game) => {
-    return values
-      .split(',')
-      .every((value) => JSON.stringify(game[key]).includes(value));
-  });
-  return filteredGames;
-};
+// const mainTypeFilter = (key, values, games) => {
+//   const filteredGames = games.filter((game) => {
+//     return values
+//       .split(',')
+//       .every((value) => JSON.stringify(game[key]).includes(value));
+//   });
+//   return filteredGames;
+// };
 
 const returnRemainingLabels = (label, usedTerms, gameData) => {
   return [
@@ -83,5 +83,5 @@ const returnRemainingLabels = (label, usedTerms, gameData) => {
 };
 
 module.exports = {
-  filterDataWithQueries,
+  buildReturnObjData,
 };

@@ -22,9 +22,14 @@ router.get('/search', async (req, res) => {
 
   //fetch games from gamesController
   const games = await gamesController.fetchGames(queries);
-
+  console.log(games.length);
   //filter games and send
-  res.send(filterData.filterDataWithQueries(games, queries));
+  const addOverallQueryInfoToReturnData = filterData.buildReturnObjData(
+    games,
+    queries,
+  );
+  console.log(addOverallQueryInfoToReturnData.length);
+  res.send(addOverallQueryInfoToReturnData);
 });
 
 /* GET list of mechanics */

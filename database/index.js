@@ -71,7 +71,7 @@ const addGamesToCategoryTable = async (games) => {
   });
 
   const query = `INSERT INTO games_categories (game_id, category) VALUES ${queryArray} ON CONFLICT DO NOTHING`;
-  console.log(query);
+
   try {
     res = await client.query(query);
   } catch (e) {
@@ -81,11 +81,12 @@ const addGamesToCategoryTable = async (games) => {
 
 const fetchGamesWithMainQuery = async (query) => {
   const client = await pool.connect();
-  const whereClauseArray = buildWhereClauseFromQueries(query);
+
+  const query1 = buildSelectClausesFromQueries(query);
+
   try {
-    const res = await client.query(
-      `SELECT * FROM games JOIN games_categories ON games.id = games_categories.game_id`,
-    );
+    const res = await client.query(query1.join(' '));
+
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -94,31 +95,51 @@ const fetchGamesWithMainQuery = async (query) => {
   }
 };
 
-const buildWhereClauseFromQueries = (query) => {
+const buildSelectClausesFromQueries = (query) => {
+  const selectListString =
+    'SELECT games.id, games.categories, games.mechanics, games.max_players, games.min_players, games.max_playtime, games.min_playtime, games.year_published, games.average_user_rating, games.thumb_url, games.name, games.category FROM games JOIN games_categories ON games.id = games_categories.game_id';
+
   //queries as key value pairs, filter empty querys
   const queryEntries = Object.entries(query).filter((entry) => entry[1] !== '');
-  let whereClauses = [];
 
+  let selectClauseArr = [];
+  let sufix = '';
+
+  // for each entry build a SELECT / INTERECT clause
   for (const [key, value] of queryEntries) {
     if (key === 'categories' || key === 'mechanics') {
       const valueArr = value.split(',');
-      valueArr.forEach((value) =>
-        whereClauses.push(`WHERE games_categories.category = '${value}'`),
-      );
+      valueArr.forEach((value) => {
+        selectClauseArr.push(
+          `${sufix}${selectListString} WHERE games_categories.category = '${value}'`,
+        );
+        sufix = 'INTERSECT ';
+      });
     } else if (key === 'play_time') {
-      whereClauses.push(`WHERE games.min_playtime >= ${value}`);
-      whereClauses.push(`WHERE games.max_playtime <= ${value}`);
+      selectClauseArr.push(
+        `${sufix}${selectListString} WHERE games.min_playtime >= ${value}`,
+      );
+      selectClauseArr.push(
+        `${sufix}${selectListString} WHERE games.max_playtime <= ${value}`,
+      );
+      sufix = 'INTERSECT ';
     } else if (key === 'player_count') {
-      whereClauses.push(`WHERE games.min_players >= ${value}`);
-      whereClauses.push(`WHERE games.max_players <= ${value}`);
+      selectClauseArr.push(
+        `${sufix}${selectListString} WHERE games.min_players >= ${value}`,
+      );
+      selectClauseArr.push(
+        `${sufix}${selectListString} WHERE games.max_players <= ${value}`,
+      );
+      sufix = 'INTERSECT ';
     } else {
-      whereClauses.push(`WHERE games.${key} = ${value}`);
+      selectClauseArr.push(
+        `${sufix}${selectListString} WHERE games.${key} = ${value}`,
+      );
+      sufix = 'INTERSECT ';
     }
   }
 
-  console.log(whereClauses);
-
-  return whereClauses;
+  return selectClauseArr;
 };
 
 module.exports = {
@@ -127,5 +148,5 @@ module.exports = {
   addDateToQuery,
   fetchGamesWithMainQuery,
   addGamesToCategoryTable,
-  buildWhereClauseFromQueries,
+  buildSelectClausesFromQueries,
 };
