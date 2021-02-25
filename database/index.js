@@ -22,7 +22,7 @@ const queryDate = async (queryId) => {
 
     return res.rows;
   } catch (e) {
-    console.log('ERROR IN QUERYDATE', e);
+    console.log(e);
     return undefined;
   } finally {
     client.release();
@@ -30,12 +30,16 @@ const queryDate = async (queryId) => {
 };
 
 const addDateToQuery = async (queryId, date) => {
-  db.none(
-    'INSERT INTO mainQueryDate(id, date) VALUES($1,$2) ON CONFLICT DO NOTHING',
-    [queryId, date.toString()],
-  ).then(() => {
-    console.log('Date Added');
-  });
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `INSERT INTO mainQueryDate(id, date) VALUES('${queryId}', '${date.toString()}') ON CONFLICT DO NOTHING`,
+    );
+  } catch (e) {
+    console.log(e);
+  } finally {
+    client.release();
+  }
 };
 
 const addGamesToDatabase = async (games) => {
@@ -57,7 +61,7 @@ const addGamesToDatabase = async (games) => {
     const res = await client.query(query1);
     return res.rows;
   } catch (e) {
-    console.log('ERROR IN addGamesToDataBase', e);
+    console.log(e);
   } finally {
     client.release();
   }
@@ -80,7 +84,7 @@ const addGamesToCategoryTable = async (games) => {
   try {
     res = await client.query(query);
   } catch (e) {
-    console.log('ERROR IN addGamesToCategoryTable', e);
+    console.log(e);
   }
 };
 
@@ -90,7 +94,7 @@ const fetchGamesWithMainQuery = async (query) => {
     const res = await client.query(`SELECT * FROM games`);
     return res.rows;
   } catch (e) {
-    console.log('ERROR IN fetchGamesWithMainQuery', e);
+    console.log(e);
   } finally {
     client.release();
   }
