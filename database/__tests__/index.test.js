@@ -16,10 +16,10 @@ const expectedResultsArr = [
   `${selectListString} WHERE games_categories.category = 'hBqZ3Ar4RJ'`,
   `INTERSECT ${selectListString} WHERE games_categories.category = 'MWoxgHrOJD'`,
   `INTERSECT ${selectListString} WHERE games_categories.category = '3te2oybNR4'`,
-  `INTERSECT ${selectListString} WHERE games.min_players >= 3`,
+  `INTERSECT ${selectListString} WHERE games.min_players <= 3`,
   `INTERSECT ${selectListString} WHERE games.max_players <= 3`,
-  `INTERSECT ${selectListString} WHERE games.min_playtime >= 15`,
-  `INTERSECT ${selectListString} WHERE games.max_playtime <= 15`,
+  `INTERSECT ${selectListString} WHERE games.min_playtime <= 15`,
+  `INTERSECT ${selectListString} WHERE games.max_playtime >= 15`,
   `INTERSECT ${selectListString} WHERE games.year_published = 2020`,
 ];
 
@@ -46,6 +46,21 @@ describe('database helper function', () => {
     expect(buildSelectClausesFromQueries(mockQuery)).toEqual([
       `${selectListString} WHERE games_categories.category = 'hBqZ3Ar4RJ'`,
       `INTERSECT ${selectListString} WHERE games_categories.category = 'MWoxgHrOJD'`,
+    ]);
+  });
+
+  test('buildWhereClauseFromQueries return expected retults array when query list is not full', () => {
+    const mockQuery = {
+      categories: '',
+      mechanics: '',
+      player_count: '2',
+      play_time: '',
+      year_published: '',
+    };
+
+    expect(buildSelectClausesFromQueries(mockQuery)).toEqual([
+      `${selectListString} WHERE games.min_players <= 2`,
+      `INTERSECT ${selectListString} WHERE games.max_players >= 2`,
     ]);
   });
 });

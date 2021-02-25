@@ -82,10 +82,10 @@ const addGamesToCategoryTable = async (games) => {
 const fetchGamesWithMainQuery = async (query) => {
   const client = await pool.connect();
 
-  const query1 = buildSelectClausesFromQueries(query);
+  const selectIntersecQueryArray = buildSelectClausesFromQueries(query);
 
   try {
-    const res = await client.query(query1.join(' '));
+    const res = await client.query(selectIntersecQueryArray.join(' '));
 
     return res.rows;
   } catch (e) {
@@ -117,18 +117,18 @@ const buildSelectClausesFromQueries = (query) => {
       });
     } else if (key === 'play_time') {
       selectClauseArr.push(
-        `${sufix}${selectListString} WHERE games.min_playtime >= ${value}`,
+        `${sufix}${selectListString} WHERE games.min_playtime <= ${value}`,
       );
       selectClauseArr.push(
-        `${sufix}${selectListString} WHERE games.max_playtime <= ${value}`,
+        `INTERSECT ${selectListString} WHERE games.max_playtime >= ${value}`,
       );
       sufix = 'INTERSECT ';
     } else if (key === 'player_count') {
       selectClauseArr.push(
-        `${sufix}${selectListString} WHERE games.min_players >= ${value}`,
+        `${sufix}${selectListString} WHERE games.min_players <= ${value}`,
       );
       selectClauseArr.push(
-        `${sufix}${selectListString} WHERE games.max_players <= ${value}`,
+        `INTERSECT ${selectListString} WHERE games.max_players >= ${value}`,
       );
       sufix = 'INTERSECT ';
     } else {
