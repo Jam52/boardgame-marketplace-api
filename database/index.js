@@ -1,12 +1,6 @@
 require('dotenv').config();
-const { Pool, Client } = require('pg');
-const pgp = require('pg-promise')();
+const { Pool } = require('pg');
 const connectionString = `postgresql://postgres:${process.env.PGPASSWORD}@localhost:5432/boardgame-db`;
-const db = pgp(connectionString);
-
-const client = new Client({
-  connectionString,
-});
 
 const pool = new Pool({
   connectionString,
@@ -14,16 +8,13 @@ const pool = new Pool({
 
 const queryDate = async (queryId) => {
   const client = await pool.connect();
-  console.log(queryId);
   try {
     const res = await client.query(
       `SELECT date FROM mainQueryDate WHERE id = '${queryId}'`,
     );
-
     return res.rows;
   } catch (e) {
     console.log(e);
-    return undefined;
   } finally {
     client.release();
   }
@@ -90,8 +81,11 @@ const addGamesToCategoryTable = async (games) => {
 
 const fetchGamesWithMainQuery = async (query) => {
   const client = await pool.connect();
+  const whereClauseArray = buildWhereClauseFromQueries(query);
   try {
-    const res = await client.query(`SELECT * FROM games`);
+    const res = await client.query(
+      `SELECT * FROM games JOIN games_categories ON games.id = games_categories.game_id`,
+    );
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -100,10 +94,38 @@ const fetchGamesWithMainQuery = async (query) => {
   }
 };
 
+const buildWhereClauseFromQueries = (query) => {
+  //queries as key value pairs, filter empty querys
+  const queryEntries = Object.entries(query).filter((entry) => entry[1] !== '');
+  let whereClauses = [];
+
+  for (const [key, value] of queryEntries) {
+    if (key === 'categories' || key === 'mechanics') {
+      const valueArr = value.split(',');
+      valueArr.forEach((value) =>
+        whereClauses.push(`WHERE games_categories.category = '${value}'`),
+      );
+    } else if (key === 'play_time') {
+      whereClauses.push(`WHERE games.min_playtime >= ${value}`);
+      whereClauses.push(`WHERE games.max_playtime <= ${value}`);
+    } else if (key === 'player_count') {
+      whereClauses.push(`WHERE games.min_players >= ${value}`);
+      whereClauses.push(`WHERE games.max_players <= ${value}`);
+    } else {
+      whereClauses.push(`WHERE games.${key} = ${value}`);
+    }
+  }
+
+  console.log(whereClauses);
+
+  return whereClauses;
+};
+
 module.exports = {
   queryDate,
   addGamesToDatabase,
   addDateToQuery,
   fetchGamesWithMainQuery,
   addGamesToCategoryTable,
+  buildWhereClauseFromQueries,
 };

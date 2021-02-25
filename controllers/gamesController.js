@@ -6,10 +6,10 @@ let fetchDataInParallel = require('../services/fetchApiData')
 const fetchGames = async (query) => {
   //get the first "main" query key and value pair
   const mainQuery = Object.entries(query).filter((entry) => entry[1] !== '')[0];
-
+  console.log(mainQuery);
   //check date the main query was last fetched will return [] if null
   const mainQueryDate = await db.queryDate(mainQuery[1].split(',')[0]);
-
+  console.log(mainQueryDate);
   if (
     mainQueryDate.length === 0 ||
     dayjs(mainQueryDate).isBefore(dayjs, 'day')
@@ -19,8 +19,11 @@ const fetchGames = async (query) => {
     //then fetch games
     const games = await fetchDataInParallel(mainQuery[0], mainQuery[1]);
     //then add them to the db
-    const res = db.addGamesToDatabase(games);
-    if (res) {
+
+    const addGameToDb = await db.addGamesToDatabase(games);
+    console.log('fetched total games: ', addGameToDb.length);
+    if (addGameToDb) {
+      db.addGamesToCategoryTable(games);
       //return them from the db
       return await db.fetchGamesWithMainQuery(query);
     }
