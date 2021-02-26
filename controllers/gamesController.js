@@ -9,24 +9,25 @@ const fetchGames = async (query) => {
   console.log(mainQuery);
   //check date the main query was last fetched will return [] if null
   const mainQueryDate = await db.queryDate(mainQuery[1].split(',')[0]);
-  console.log(mainQueryDate);
+  console.log(mainQueryDate[0].date);
+  console.log(dayjs(mainQueryDate[0].date).isBefore(dayjs(), 'day'));
   if (
     mainQueryDate.length === 0 ||
-    dayjs(mainQueryDate).isBefore(dayjs, 'day')
+    dayjs(mainQueryDate[0].date).isBefore(dayjs(), 'day')
   ) {
+    console.log('Fetching from api');
     //if date is older than 1 day or not yet been fetched add date to mainQueryDate Table
-    db.addDateToQuery(mainQuery[1], dayjs().format('YYYY-MM-DD'));
+    await db.addDateToQuery(mainQuery[1], dayjs().format('YYYY-MM-DD'));
     //then fetch games
     const games = await fetchDataInParallel(mainQuery[0], mainQuery[1]);
-    //then add them to the db
 
+    //then add them to the db category table once in game table
     const addGameToDb = await db.addGamesToDatabase(games);
-    console.log('fetched total games: ', addGameToDb.length);
     if (addGameToDb) {
       db.addGamesToCategoryTable(games);
-      //return them from the db
-      return await db.fetchGamesWithMainQuery(query);
     }
+    //return them from the db
+    return await db.fetchGamesWithMainQuery(query);
   } else {
     //if date is not old or empty return data from the db
     const games = await db.fetchGamesWithMainQuery(query);

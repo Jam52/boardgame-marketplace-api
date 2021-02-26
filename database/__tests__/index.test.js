@@ -7,6 +7,8 @@ const mockQuery = {
   player_count: '3',
   play_time: '15',
   year_published: '2020',
+  order_by: 'average_user_raiting',
+  asc: 'true',
 };
 
 const selectListString =
@@ -21,11 +23,12 @@ const expectedResultsArr = [
   `INTERSECT ${selectListString} WHERE games.min_playtime <= 15`,
   `INTERSECT ${selectListString} WHERE games.max_playtime >= 15`,
   `INTERSECT ${selectListString} WHERE games.year_published = 2020`,
+  'ORDER BY name ASC',
 ];
 
 describe('database helper function', () => {
   test('buildWhereClauseFromQueries returns an array with length equal to queries', () => {
-    expect(buildSelectClausesFromQueries(mockQuery)).toHaveLength(8);
+    expect(buildSelectClausesFromQueries(mockQuery)).toHaveLength(10);
   });
 
   test('buildWhereClauseFromQueries return expected retults array when query list is full', () => {
@@ -61,6 +64,7 @@ describe('database helper function', () => {
     expect(buildSelectClausesFromQueries(mockQuery)).toEqual([
       `${selectListString} WHERE games.min_players <= 2`,
       `INTERSECT ${selectListString} WHERE games.max_players >= 2`,
+      'ORDER BY popularity DESC',
     ]);
   });
 });

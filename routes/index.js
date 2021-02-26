@@ -1,4 +1,5 @@
-let filterData = require('../services/filterData.js');
+let gameObjectReturnData = require('../services/gameObjectReturnData.js')
+  .buildReturnObjData;
 let gamesController = require('../controllers/gamesController');
 
 var express = require('express');
@@ -18,16 +19,16 @@ router.get('/search', async (req, res) => {
     player_count: req.query.player_count,
     play_time: req.query.play_time,
     year_published: req.query.year_published,
+    order_by: req.query.order_by,
   };
+
+  console.log(queries);
 
   //fetch games from gamesController
   const games = await gamesController.fetchGames(queries);
   console.log(games.length);
   //filter games and send
-  const addOverallQueryInfoToReturnData = filterData.buildReturnObjData(
-    games,
-    queries,
-  );
+  const addOverallQueryInfoToReturnData = gameObjectReturnData(games, queries);
   console.log(addOverallQueryInfoToReturnData.length);
   res.send(addOverallQueryInfoToReturnData);
 });

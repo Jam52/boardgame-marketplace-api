@@ -21,11 +21,13 @@ const queryDate = async (queryId) => {
 };
 
 const addDateToQuery = async (queryId, date) => {
+  console.log('adding date to table');
   const client = await pool.connect();
   try {
     const res = await client.query(
-      `INSERT INTO mainQueryDate(id, date) VALUES('${queryId}', '${date.toString()}') ON CONFLICT DO NOTHING`,
+      `INSERT INTO mainQueryDate(id, date) VALUES('${queryId}', '${date.toString()}') ON CONFLICT (id) DO UPDATE SET date = '${date.toString()}'`,
     );
+    console.log(res);
   } catch (e) {
     console.log(e);
   } finally {
@@ -59,6 +61,7 @@ const addGamesToDatabase = async (games) => {
 };
 
 const addGamesToCategoryTable = async (games) => {
+  console.log('Adding games to category table');
   const client = await pool.connect();
   const queryArray = [];
   games.forEach((game) => {
@@ -80,6 +83,7 @@ const addGamesToCategoryTable = async (games) => {
 };
 
 const fetchGamesWithMainQuery = async (query) => {
+  console.log('Fetching from Database');
   const client = await pool.connect();
 
   const selectIntersecQueryArray = buildSelectClausesFromQueries(query);
@@ -131,7 +135,7 @@ const buildSelectClausesFromQueries = (query) => {
         `INTERSECT ${selectListString} WHERE games.max_players >= ${value}`,
       );
       sufix = 'INTERSECT ';
-    } else {
+    } else if (key !== 'order_by') {
       selectClauseArr.push(
         `${sufix}${selectListString} WHERE games.${key} = ${value}`,
       );

@@ -9,31 +9,6 @@ const buildReturnObjData = (games, queries) => {
     max_players: null,
     min_players: null,
   };
-  // let entries = Object.entries(queries);
-  // entries.forEach((query) => {
-  //   const [key, value] = query;
-  //   if (value !== '') {
-  //     if (key === 'mechanics' || key === 'categories') {
-  //       gameObj.games = mainTypeFilter(key, value, gameObj.games);
-  //     }
-
-  //     if (key === 'player_count') {
-  //       gameObj.games = gameObj.games.filter((game) => {
-  //         return game.min_players <= value && game.max_players >= value;
-  //       });
-  //     }
-  //     if (key === 'play_time') {
-  //       gameObj.games = gameObj.games.filter((game) => {
-  //         return game.min_playtime <= value && game.max_playtime >= value;
-  //       });
-  //     }
-  //     if (key === 'year_published') {
-  //       gameObj.games = gameObj.games.filter((game) => {
-  //         return game.year_published === value;
-  //       });
-  //     }
-  //   }
-  // });
 
   gameObj.mechanics = returnRemainingLabels(
     'mechanics',

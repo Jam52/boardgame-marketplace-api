@@ -38,11 +38,12 @@ const fetchDataInParallel = async (type, query) => {
         });
 
         gamesReturned = finisehdBatchData.length;
-
+        console.log('GamesFetched:', gamesReturned);
         returnGameData = returnGameData.concat(finisehdBatchData);
       });
     }
   }
+  console.log('Total games returned:', returnGameData.length);
   return returnGameData;
 };
 
