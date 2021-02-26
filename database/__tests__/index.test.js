@@ -8,7 +8,7 @@ const mockQuery = {
   play_time: '15',
   year_published: '2020',
   order_by: 'average_user_raiting',
-  asc: 'true',
+  asc: '',
 };
 
 const selectListString =
@@ -19,16 +19,16 @@ const expectedResultsArr = [
   `INTERSECT ${selectListString} WHERE games_categories.category = 'MWoxgHrOJD'`,
   `INTERSECT ${selectListString} WHERE games_categories.category = '3te2oybNR4'`,
   `INTERSECT ${selectListString} WHERE games.min_players <= 3`,
-  `INTERSECT ${selectListString} WHERE games.max_players <= 3`,
+  `INTERSECT ${selectListString} WHERE games.max_players >= 3`,
   `INTERSECT ${selectListString} WHERE games.min_playtime <= 15`,
   `INTERSECT ${selectListString} WHERE games.max_playtime >= 15`,
   `INTERSECT ${selectListString} WHERE games.year_published = 2020`,
-  'ORDER BY name ASC',
+  'ORDER BY average_user_rating DESC',
 ];
 
 describe('database helper function', () => {
   test('buildWhereClauseFromQueries returns an array with length equal to queries', () => {
-    expect(buildSelectClausesFromQueries(mockQuery)).toHaveLength(10);
+    expect(buildSelectClausesFromQueries(mockQuery)).toHaveLength(9);
   });
 
   test('buildWhereClauseFromQueries return expected retults array when query list is full', () => {
@@ -44,11 +44,14 @@ describe('database helper function', () => {
       player_count: '',
       play_time: '',
       year_published: '',
+      order_by: 'name',
+      asc: 'true',
     };
 
     expect(buildSelectClausesFromQueries(mockQuery)).toEqual([
       `${selectListString} WHERE games_categories.category = 'hBqZ3Ar4RJ'`,
       `INTERSECT ${selectListString} WHERE games_categories.category = 'MWoxgHrOJD'`,
+      'ORDER BY name ASC',
     ]);
   });
 
@@ -64,7 +67,7 @@ describe('database helper function', () => {
     expect(buildSelectClausesFromQueries(mockQuery)).toEqual([
       `${selectListString} WHERE games.min_players <= 2`,
       `INTERSECT ${selectListString} WHERE games.max_players >= 2`,
-      'ORDER BY popularity DESC',
+      'ORDER BY average_user_rating DESC',
     ]);
   });
 });

@@ -9,12 +9,12 @@ const fetchGames = async (query) => {
   console.log(mainQuery);
   //check date the main query was last fetched will return [] if null
   const mainQueryDate = await db.queryDate(mainQuery[1].split(',')[0]);
-  console.log(mainQueryDate[0].date);
-  console.log(dayjs(mainQueryDate[0].date).isBefore(dayjs(), 'day'));
-  if (
-    mainQueryDate.length === 0 ||
-    dayjs(mainQueryDate[0].date).isBefore(dayjs(), 'day')
-  ) {
+
+  let isQueryDateOutdated = true;
+  if (mainQueryDate.length !== 0) {
+    isQueryDateOutdated = dayjs(mainQueryDate[0].date).isBefore(dayjs(), 'day');
+  }
+  if (isQueryDateOutdated) {
     console.log('Fetching from api');
     //if date is older than 1 day or not yet been fetched add date to mainQueryDate Table
     await db.addDateToQuery(mainQuery[1], dayjs().format('YYYY-MM-DD'));

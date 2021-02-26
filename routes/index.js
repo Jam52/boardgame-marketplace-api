@@ -22,15 +22,20 @@ router.get('/search', async (req, res) => {
     order_by: req.query.order_by,
   };
 
-  console.log(queries);
-
   //fetch games from gamesController
-  const games = await gamesController.fetchGames(queries);
-  console.log(games.length);
-  //filter games and send
-  const addOverallQueryInfoToReturnData = gameObjectReturnData(games, queries);
-  console.log(addOverallQueryInfoToReturnData.length);
-  res.send(addOverallQueryInfoToReturnData);
+  try {
+    const games = await gamesController.fetchGames(queries);
+    console.log(games.length);
+    //filter games and send
+    const addOverallQueryInfoToReturnData = gameObjectReturnData(
+      games,
+      queries,
+    );
+    console.log(addOverallQueryInfoToReturnData.length);
+    res.send(addOverallQueryInfoToReturnData);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 /* GET list of mechanics */

@@ -12,6 +12,7 @@ const queryDate = async (queryId) => {
     const res = await client.query(
       `SELECT date FROM mainQueryDate WHERE id = '${queryId}'`,
     );
+    console.log('queryDate', res.rows);
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -108,6 +109,8 @@ const buildSelectClausesFromQueries = (query) => {
 
   let selectClauseArr = [];
   let sufix = '';
+  let orderBy = 'average_user_rating';
+  let asc = 'DESC';
 
   // for each entry build a SELECT / INTERECT clause
   for (const [key, value] of queryEntries) {
@@ -135,13 +138,18 @@ const buildSelectClausesFromQueries = (query) => {
         `INTERSECT ${selectListString} WHERE games.max_players >= ${value}`,
       );
       sufix = 'INTERSECT ';
-    } else if (key !== 'order_by') {
+    } else if (key === 'order_by') {
+      orderBy = value;
+    } else if (key === 'asc') {
+      asc = value === 'true' ? 'ASC' : 'DESC';
+    } else if (key === 'year_published') {
       selectClauseArr.push(
-        `${sufix}${selectListString} WHERE games.${key} = ${value}`,
+        `${sufix}${selectListString} WHERE games.year_published = ${value}`,
       );
       sufix = 'INTERSECT ';
     }
   }
+  selectClauseArr.push(`ORDER BY ${orderBy} ${asc}`);
 
   return selectClauseArr;
 };
