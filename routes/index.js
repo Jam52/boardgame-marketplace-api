@@ -21,6 +21,7 @@ router.get('/search', async (req, res) => {
     year_published: req.query.year_published,
     order_by: req.query.order_by,
     asc: req.query.asc,
+    skipValue: req.query.skip,
   };
 
   //fetch games from gamesController
@@ -32,7 +33,6 @@ router.get('/search', async (req, res) => {
       games,
       queries,
     );
-    console.log(addOverallQueryInfoToReturnData);
     res.send(addOverallQueryInfoToReturnData);
   } catch (e) {
     console.log(e);
