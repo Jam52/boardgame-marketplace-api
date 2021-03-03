@@ -13,6 +13,7 @@ const fetchWithSearchQueries = async (type, query, skipValue) => {
 };
 
 const fetchDataInParallel = async (type, query) => {
+  console.log('Fetching from api');
   let returnGameData = [];
   let gamesReturned = 300;
   let skipValue = 0;

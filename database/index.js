@@ -12,7 +12,6 @@ const queryDate = async (queryId) => {
     const res = await client.query(
       `SELECT date FROM mainQueryDate WHERE id = '${queryId}'`,
     );
-    console.log('queryDate', res.rows);
     return res.rows;
   } catch (e) {
     console.log(e);
@@ -28,7 +27,6 @@ const addDateToQuery = async (queryId, date) => {
     const res = await client.query(
       `INSERT INTO mainQueryDate(id, date) VALUES('${queryId}', '${date.toString()}') ON CONFLICT (id) DO UPDATE SET date = '${date.toString()}'`,
     );
-    console.log(res);
   } catch (e) {
     console.log(e);
   } finally {

@@ -20,6 +20,7 @@ router.get('/search', async (req, res) => {
     play_time: req.query.play_time,
     year_published: req.query.year_published,
     order_by: req.query.order_by,
+    asc: req.query.asc,
   };
 
   //fetch games from gamesController
@@ -31,7 +32,7 @@ router.get('/search', async (req, res) => {
       games,
       queries,
     );
-    console.log(addOverallQueryInfoToReturnData.length);
+    console.log(addOverallQueryInfoToReturnData);
     res.send(addOverallQueryInfoToReturnData);
   } catch (e) {
     console.log(e);
