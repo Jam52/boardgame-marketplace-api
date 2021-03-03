@@ -1,20 +1,17 @@
-let fetchDataInParallel = require('../services/fetchApiData')
-  .fetchDataInParallel;
-let filterData = require('../services/filterData.js');
-let db = require('../database/index');
-let dayjs = require('dayjs');
+let gameObjectReturnData = require('../services/gameObjectReturnData.js')
+  .buildReturnObjData;
+let gamesController = require('../controllers/gamesController');
 
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
-
-let cashedData = {};
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* GET game data based on queries passed */
 router.get('/search', async (req, res) => {
   const queries = {
     categories: req.query.categories,
@@ -22,57 +19,27 @@ router.get('/search', async (req, res) => {
     player_count: req.query.player_count,
     play_time: req.query.play_time,
     year_published: req.query.year_published,
+    order_by: req.query.order_by,
+    asc: req.query.asc,
   };
 
-  const keyArry = Object.keys(queries);
-
-  for (let i = 0; i < keyArry.length; i++) {
-    if (queries[keyArry[i]] !== '') {
-      const mainCategory = queries[keyArry[i]].split(',')[0];
-      const dateOfLastQueryCall = await db.queryDate(mainCategory);
-      console.log(dateOfLastQueryCall);
-
-      if (
-        dateOfLastQueryCall.length === 0 ||
-        dayjs(dateOfLastQueryCall.date).isBefore(dayjs(), 'day')
-      ) {
-        console.log('Fetching');
-        const games = await fetchDataInParallel([keyArry[i]], mainCategory);
-        db.addDateToQuery(mainCategory, dayjs().format('YYYY-MM-DD'));
-        const returnedGamesFromBd = await db.addGamesToDatabase(games);
-        if (returnedGamesFromBd) {
-          db.addGamesToCategoryTable(games);
-        }
-        const filteredGames = filterData.filterDataWithQueries(
-          returnedGamesFromBd,
-          queries,
-        );
-
-        try {
-          res.send(filteredGames);
-        } catch (error) {
-          console.log(error);
-        }
-
-        break;
-      } else {
-        console.log('returning from cash');
-        try {
-          const cachesGames = await db.fetchGamesWithMainQuery(
-            mainCategory,
-            queries,
-          );
-          res.send(filterData.filterDataWithQueries(cachesGames, queries));
-        } catch (error) {
-          console.log(error);
-        }
-
-        break;
-      }
-    }
+  //fetch games from gamesController
+  try {
+    const games = await gamesController.fetchGames(queries);
+    console.log(games.length);
+    //filter games and send
+    const addOverallQueryInfoToReturnData = gameObjectReturnData(
+      games,
+      queries,
+    );
+    console.log(addOverallQueryInfoToReturnData);
+    res.send(addOverallQueryInfoToReturnData);
+  } catch (e) {
+    console.log(e);
   }
 });
 
+/* GET list of mechanics */
 router.get('/mechanics', async (req, res) => {
   try {
     const responseData = await axios.get(
@@ -84,6 +51,7 @@ router.get('/mechanics', async (req, res) => {
   }
 });
 
+/* GET list of categories */
 router.get('/categories', async (req, res) => {
   try {
     const responseData = await axios.get(

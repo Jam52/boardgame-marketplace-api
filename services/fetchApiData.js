@@ -13,6 +13,7 @@ const fetchWithSearchQueries = async (type, query, skipValue) => {
 };
 
 const fetchDataInParallel = async (type, query) => {
+  console.log('Fetching from api');
   let returnGameData = [];
   let gamesReturned = 300;
   let skipValue = 0;
@@ -38,11 +39,12 @@ const fetchDataInParallel = async (type, query) => {
         });
 
         gamesReturned = finisehdBatchData.length;
-
+        console.log('GamesFetched:', gamesReturned);
         returnGameData = returnGameData.concat(finisehdBatchData);
       });
     }
   }
+  console.log('Total games returned:', returnGameData.length);
   return returnGameData;
 };
 
