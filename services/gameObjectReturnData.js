@@ -44,9 +44,9 @@ const buildReturnObjData = (games, queries) => {
   //add num of games to game obj
   gameObj.length = gameObj.games.length;
 
-  let skipValue = queries.skipValue;
-
-  const filteredGames = gameObj.games.slice(skipValue, skipValue + 30);
+  let skipStart = Number(queries.skipValue);
+  let skipEnd = Number(skipStart) + 30;
+  const filteredGames = gameObj.games.slice(skipStart, skipEnd);
   gameObj.games = filteredGames;
   return gameObj;
 };
