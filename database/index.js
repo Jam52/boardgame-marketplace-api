@@ -1,81 +1,103 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const { PG_HOST, PG_USER, PG_PASS, PG_DB, PG_PORT } = process.env;
+
 const connectionString = `postgresql://postgres:${process.env.PGPASSWORD}@localhost:5432/boardgame-db`;
 
-const pool = new Pool({
-  connectionString,
+const knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host: PG_HOST,
+    user: PG_USER,
+    password: PG_PASS,
+    database: PG_DB,
+    port: PG_PORT || 5432,
+  },
 });
 
+//
 const queryDate = async (queryId) => {
-  const client = await pool.connect();
   try {
-    const res = await client.query(
-      `SELECT date FROM mainQueryDate WHERE id = '${queryId}'`,
-    );
-    return res.rows;
+    const date = await knex('mainquerydate')
+      .select('date')
+      .where('id', '=', queryId);
+    return date;
   } catch (e) {
     console.log(e);
-  } finally {
-    client.release();
   }
+  return null;
 };
 
 const addDateToQuery = async (queryId, date) => {
   console.log('adding date to table');
-  const client = await pool.connect();
+  console.log(queryId);
   try {
-    const res = await client.query(
-      `INSERT INTO mainQueryDate(id, date) VALUES('${queryId}', '${date.toString()}') ON CONFLICT (id) DO UPDATE SET date = '${date.toString()}'`,
-    );
+    knex('mainquerydate')
+      .insert({ id: queryId, date: date.toString() })
+      .then(function (res) {
+        return { success: true, message: 'ok' }; // respond back to request
+      });
   } catch (e) {
     console.log(e);
-  } finally {
-    client.release();
   }
 };
 
 const addGamesToDatabase = async (games) => {
-  const client = await pool.connect();
-  games = games.map((game) => {
-    return `('${game.id}', ARRAY [${game.categories.map(
-      (category) => "'" + category.id + "'",
-    )}]::VARCHAR[], ARRAY [${game.mechanics.map(
-      (category) => "'" + category.id + "'",
-    )}]::VARCHAR[], ${game.max_players}, ${game.min_players}, ${
-      game.max_playtime
-    }, ${game.min_playtime}, ${game.year_published}, ${
-      game.average_user_rating
-    }, '${game.thumb_url}', E'${game.name.replace(/'/g, "\\'")}')`;
+  console.log('adding game to db');
+  const gameData = games.map((game) => {
+    return {
+      id: game.id,
+      categories: game.categories.map((category) => category.id),
+      mechanics: game.mechanics.map((mechanics) => mechanics.id),
+      max_players: game.max_players,
+      min_players: game.min_players,
+      max_playtime: game.max_playtime,
+      min_playtime: game.min_playtime,
+      year_published: game.year_published,
+      average_user_rating: game.average_user_rating,
+      thumb_url: game.thumb_url,
+      name: game.name,
+    };
   });
 
-  const query1 = `INSERT INTO "games" (id, categories, mechanics, max_players, min_players, max_playtime, min_playtime, year_published, average_user_rating, thumb_url, name) VALUES ${games} ON CONFLICT DO NOTHING RETURNING *`;
   try {
-    const res = await client.query(query1);
-    return res.rows;
+    const games = await knex('games')
+      .insert(gameData)
+      .then(function (res) {
+        console.log(res);
+        return { success: true, message: 'ok' };
+      })
+      .catch((e) => {
+        return e;
+      });
+    return games;
   } catch (e) {
     console.log(e);
-  } finally {
-    client.release();
   }
 };
 
 const addGamesToCategoryTable = async (games) => {
   console.log('Adding games to category table');
-  const client = await pool.connect();
+
   const queryArray = [];
   games.forEach((game) => {
     game.categories.forEach((cat) =>
-      queryArray.push(`('${game.id}', '${cat.id}')`),
+      queryArray.push({ game_id: game.id, category: cat.id }),
     );
     game.mechanics.forEach((mech) =>
-      queryArray.push(`('${game.id}', '${mech.id}')`),
+      queryArray.push({ game_id: game.id, category: mech.id }),
     );
   });
 
-  const query = `INSERT INTO games_categories (game_id, category) VALUES ${queryArray} ON CONFLICT DO NOTHING`;
-
   try {
-    res = await client.query(query);
+    knex('games_categories')
+      .insert(queryArray)
+      .then(function (res) {
+        console.log(res);
+        return { success: true, message: 'ok' };
+      })
+      .catch((e) => {
+        return e;
+      });
   } catch (e) {
     console.log(e);
   }
