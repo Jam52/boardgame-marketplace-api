@@ -26,8 +26,10 @@ exports.up = function (knex) {
           .string('game_id')
           .references('id')
           .inTable('games');
+        gamesCategoriesTable.string('game_name');
         gamesCategoriesTable.string('category');
         gamesCategoriesTable.primary(['game_id', 'category']);
+        gamesCategoriesTable.unique(['game_id', 'category']);
         gamesCategoriesTable.timestamps(true, true);
       },
     },

@@ -22,17 +22,14 @@ const fetchGames = async (query) => {
     //then add them to the db category table once in game table
     const addGameToDb = await db.addGamesToDatabase(games);
     if (addGameToDb) {
-      db.addGamesToCategoryTable(games);
+      await db.addGamesToCategoryTable(games);
+      return await db.fetchGamesWithMainQuery(query);
     }
+  } else {
+    //if category exists in db
+    const games = await db.fetchGamesWithMainQuery(query);
+    return games;
   }
-
-  //return them from the db
-  //   return await db.fetchGamesWithMainQuery(query);
-  // } else {
-  //   //if date is not old or empty return data from the db
-  //   const games = await db.fetchGamesWithMainQuery(query);
-  //   return games;
-  // }
 };
 
 module.exports = {
