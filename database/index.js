@@ -123,7 +123,7 @@ const fetchGamesWithMainQuery = async (query) => {
           builder.andWhere('min_playtime', '<=', query.play_time);
         }
         if (query.year_published) {
-          builder.andWhere('year_published,', query.year_published);
+          builder.andWhere('year_published', query.year_published);
         }
       })
       .orderBy(query.order_by, query.asc === 'true' ? 'asc' : 'desc');

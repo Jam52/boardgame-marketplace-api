@@ -4,6 +4,11 @@ let fetchDataInParallel = require('../services/fetchApiData')
   .fetchDataInParallel;
 
 const fetchGames = async (query) => {
+  console.log(query);
+  if (!query.categories && !query.mechanics) {
+    return [];
+  }
+
   //get the first "main" query key and value pair
   const mainQuery = Object.entries(query).filter((entry) => entry[1] !== '')[0];
   console.log(mainQuery);
