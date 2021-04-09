@@ -101,58 +101,39 @@ const addGamesToCategoryTable = async (games) => {
 
 const fetchGamesWithMainQuery = async (query) => {
   console.log('Fetching from Database');
-  console.log(query);
+  let allQuerys = [];
 
+  if (query.categories) {
+    allQuerys = allQuerys.concat(query.categories.split(','));
+  }
+  if (query.mechanics) {
+    allQuerys = allQuerys.concat(query.mechanics.split(','));
+  }
   try {
     const gameData = await knex('games')
       .select('*')
-      .join('games_categories', 'games.id', '=', 'games_categories.game_id')
       .where((builder) => {
-        if (query.categories) {
-          const categoryQuerys = query.categories.split(',');
-          builder.where('games_categories.category', categoryQuerys[0]);
+        builder.whereIn(
+          'id',
+          knex('games_categories')
+            .select('game_id')
+            .whereIn('category', allQuerys)
+            .groupBy('game_id')
+            .havingRaw('COUNT(category) = ?', allQuerys.length),
+        );
+        if (query.player_count) {
+          builder.andWhere('max_players', '>=', query.player_count);
+          builder.andWhere('min_players', '<=', query.player_count);
         }
-        if (query.mechanics) {
-          const mechanicQuerys = query.mechanics.split(',');
-          builder.where('games_categories.category', mechanicQuerys[0]);
+        if (query.play_time) {
+          builder.andWhere('max_playtime', '>=', query.play_time);
+          builder.andWhere('min_playtime', '<=', query.play_time);
         }
-      })
-      .intersect((builder) => {
-        if (query.categories) {
-          const categoryQuerys = query.categories.split(',');
-          if (categoryQuerys.length > 1) {
-            for (let i = 1; i < categoryQuerys.length; i++) {
-              builder
-                .join(
-                  'games_categories',
-                  'games.id',
-                  '=',
-                  'games_categories.game_id',
-                )
-                .where('games_categories.category', categoryQuerys[i]);
-            }
-          }
+        if (query.year_published) {
+          builder.andWhere('year_published,', query.year_published);
         }
-        // if (query.mechanics) {
-        //   const mechanicQuerys = query.mechanics.split(',');
-        //   builder.where('games_categories.category', mechanicQuerys[0]);
-        // }
       });
-    // .where((builder) => {
-    //   if (query.player_count) {
-    //     builder.where('games.max_players', '<', query.player_count);
-    //     builder.where('games.min_players', '>', query.player_count);
-    //   }
-    //   if (query.play_time) {
-    //     builder.where('games.max_playtime', '<', query.play_time);
-    //     builder.where('games.min_playtime', '>', query.play_time);
-    //   }
-    //   if (query.year_published) {
-    //     builder.where('games.year_published,', query.year_published);
-    //   }
-    // })
 
-    console.log(gameData);
     return gameData;
   } catch (e) {
     console.log(e);
