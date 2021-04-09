@@ -57,7 +57,7 @@ const addGamesToDatabase = async (games) => {
   });
 
   try {
-    const games = await knex('games').insert(gameData).onConflict().merge();
+    const games = await knex('games').insert(gameData).onConflict('id').merge();
     return games;
   } catch (e) {
     console.log(e);
@@ -73,24 +73,21 @@ const addGamesToCategoryTable = async (games) => {
       queryArray.push({
         game_id: game.id,
         category: cat.id,
-        game_name: game.name,
       }),
     );
     game.mechanics.forEach((mech) =>
       queryArray.push({
         game_id: game.id,
         category: mech.id,
-        game_name: game.name,
       }),
     );
   });
 
-  console.log(queryArray);
   try {
-    const insert = await knex('games_categories').insert(queryArray);
-    console.log(insert).catch((e) => {
-      return e;
-    });
+    const insert = await knex('games_categories')
+      .insert(queryArray)
+      .onConflict(['game_id', 'category'])
+      .ignore();
   } catch (e) {
     console.log(e);
   }

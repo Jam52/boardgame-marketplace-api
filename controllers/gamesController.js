@@ -18,11 +18,13 @@ const fetchGames = async (query) => {
     //then fetch games
     console.log('fetching games');
     const games = await fetchDataInParallel(mainQuery[0], mainQuery[1]);
-    db.addDateToQuery(mainQueryId, dayjs().format('YYYY-MM-DD'));
+
     //then add them to the db category table once in game table
     const addGameToDb = await db.addGamesToDatabase(games);
+    console.log('ERROR:', addGameToDb);
     if (addGameToDb) {
       await db.addGamesToCategoryTable(games);
+      await db.addDateToQuery(mainQueryId, dayjs().format('YYYY-MM-DD'));
       return await db.fetchGamesWithMainQuery(query);
     }
   } else {
