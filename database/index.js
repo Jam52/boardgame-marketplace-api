@@ -1,8 +1,6 @@
 require('dotenv').config();
 const { PG_HOST, PG_USER, PG_PASS, PG_DB, PG_PORT } = process.env;
 
-const connectionString = `postgresql://postgres:${process.env.PGPASSWORD}@localhost:5432/boardgame-db`;
-
 const knex = require('knex')({
   client: 'pg',
   connection: {
@@ -139,60 +137,6 @@ const fetchGamesWithMainQuery = async (query) => {
     console.log(e);
   }
 };
-
-// const buildSelectClausesFromQueries = (query) => {
-//   const selectListString =
-//     'SELECT games.id, games.categories, games.mechanics, games.max_players, games.min_players, games.max_playtime, games.min_playtime, games.year_published, games.average_user_rating, games.thumb_url, games.name, games.category FROM games JOIN games_categories ON games.id = games_categories.game_id';
-
-//   //queries as key value pairs, filter empty querys
-//   const queryEntries = Object.entries(query).filter((entry) => entry[1] !== '');
-
-//   let selectClauseArr = [];
-//   let sufix = '';
-//   let orderBy = 'average_user_rating';
-//   let asc = 'DESC';
-
-//   // for each entry build a SELECT / INTERECT clause
-//   for (const [key, value] of queryEntries) {
-//     if (key === 'categories' || key === 'mechanics') {
-//       const valueArr = value.split(',');
-//       valueArr.forEach((value) => {
-//         selectClauseArr.push(
-//           `${sufix}${selectListString} WHERE games_categories.category = '${value}'`,
-//         );
-//         sufix = 'INTERSECT ';
-//       });
-//     } else if (key === 'play_time') {
-//       selectClauseArr.push(
-//         `${sufix}${selectListString} WHERE games.min_playtime <= ${value}`,
-//       );
-//       selectClauseArr.push(
-//         `INTERSECT ${selectListString} WHERE games.max_playtime >= ${value}`,
-//       );
-//       sufix = 'INTERSECT ';
-//     } else if (key === 'player_count') {
-//       selectClauseArr.push(
-//         `${sufix}${selectListString} WHERE games.min_players <= ${value}`,
-//       );
-//       selectClauseArr.push(
-//         `INTERSECT ${selectListString} WHERE games.max_players >= ${value}`,
-//       );
-//       sufix = 'INTERSECT ';
-//     } else if (key === 'order_by') {
-//       orderBy = value;
-//     } else if (key === 'asc') {
-//       asc = value === 'true' ? 'ASC' : 'DESC';
-//     } else if (key === 'year_published') {
-//       selectClauseArr.push(
-//         `${sufix}${selectListString} WHERE games.year_published = ${value}`,
-//       );
-//       sufix = 'INTERSECT ';
-//     }
-//   }
-//   selectClauseArr.push(`ORDER BY ${orderBy} ${asc}`);
-
-//   return selectClauseArr;
-// };
 
 module.exports = {
   queryDate,
