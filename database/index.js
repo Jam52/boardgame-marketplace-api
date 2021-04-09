@@ -12,7 +12,6 @@ const knex = require('knex')({
   },
 });
 
-//
 const queryDate = async (queryId) => {
   try {
     const date = await knex('mainquerydate')
@@ -58,7 +57,7 @@ const addGamesToDatabase = async (games) => {
   });
 
   try {
-    const games = await knex('games').insert(gameData);
+    const games = await knex('games').insert(gameData).onConflict().merge();
     return games;
   } catch (e) {
     console.log(e);
@@ -100,7 +99,6 @@ const addGamesToCategoryTable = async (games) => {
 const fetchGamesWithMainQuery = async (query) => {
   console.log('Fetching from Database');
   let allQuerys = [];
-
   if (query.categories) {
     allQuerys = allQuerys.concat(query.categories.split(','));
   }
@@ -130,7 +128,8 @@ const fetchGamesWithMainQuery = async (query) => {
         if (query.year_published) {
           builder.andWhere('year_published,', query.year_published);
         }
-      });
+      })
+      .orderBy(query.order_by, query.asc === 'true' ? 'asc' : 'desc');
 
     return gameData;
   } catch (e) {
